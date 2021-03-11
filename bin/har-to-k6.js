@@ -2,6 +2,7 @@
 
 const chalk = require('chalk')
 const convert = require('../src/convert')
+const filter = require('../src/filter')
 const fs = require('fs')
 const io = require('caporal')
 const pkginfo = require('pkginfo')
@@ -15,6 +16,12 @@ delete module.exports.version
 
 io.version(version)
   .description('Convert LI-HAR to k6 script')
+  .option(
+    '--only <domains>',
+    'include only requests from the given domains',
+    only,
+    '*'
+  )
   .option('-o, --output <output>', 'Output file', output, 'loadtest.js')
   .argument('<archive>', 'LI-HAR archive to convert')
   .action(run)
@@ -28,12 +35,20 @@ function output(value) {
   return value
 }
 
+function only(value) {
+  if (value === '*') return null
+  return value.split(',')
+}
+
 async function run(arg, opt, log) {
   try {
     start(arg.archive, log)
     const json = read(arg.archive)
     const archive = parse(json)
-    const { main } = await transform(archive)
+    const filtered = opt.only
+      ? await filter(archive, { only: opt.only })
+      : archive
+    const { main } = await transform(filtered)
     write(main, opt.output)
     success(opt.output, log)
   } catch (error) {
