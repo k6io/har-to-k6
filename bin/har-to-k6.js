@@ -66,7 +66,7 @@ function read(file) {
 
 function parse(json) {
   try {
-    return JSON.parse(json)
+    return JSON.parse(json.trim())
   } catch (error) {
     throw new CommandLineError({ name: 'ParseError', cause: error })
   }

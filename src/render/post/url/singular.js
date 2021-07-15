@@ -13,9 +13,10 @@ function singular(params) {
 }
 
 function entry(name, item) {
+  name = decodeURIComponent(name)
   const result = { name }
   if (isString(item.value)) {
-    result.value = text(item.value)
+    result.value = text(decodeURIComponent(item.value))
   }
   if (item.comment || item.contentType || item.fileName) {
     result.comment = comment(item)

@@ -22,9 +22,10 @@ function specify(params) {
 }
 
 function singular(name, item) {
+  name = decodeURIComponent(name)
   const entry = { name }
   if (item.value) {
-    entry.value = text(item.value)
+    entry.value = text(decodeURIComponent(item.value))
   }
   if (item.comment) {
     entry.comment = item.comment
@@ -33,8 +34,9 @@ function singular(name, item) {
 }
 
 function plural(name, items) {
+  name = decodeURIComponent(name)
   const entry = { name }
-  const values = items.map((item) => item.value)
+  const values = items.map((item) => decodeURIComponent(item.value))
   if (values.length) {
     const content = values.map((value) => text(value)).join(', ')
     entry.value = `[ ${content} ]`

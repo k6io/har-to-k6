@@ -15,11 +15,12 @@ function value(params) {
 
 function specify(params) {
   const spec = {}
-  for (const [name, items] of params) {
+  for (let [name, items] of params) {
+    name = decodeURIComponent(name)
     if (items.size > 1) {
-      spec[name] = [...items].map((item) => item.value)
+      spec[name] = [...items].map((item) => decodeURIComponent(item.value))
     } else {
-      spec[name] = [...items][0].value
+      spec[name] = decodeURIComponent([...items][0].value)
     }
   }
   return spec
